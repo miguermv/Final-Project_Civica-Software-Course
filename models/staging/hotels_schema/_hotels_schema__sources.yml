@@ -1,0 +1,135 @@
+version: 2
+
+sources:
+  - name: hotels_schema
+    schema: hotels_schema
+    database: PROYECTO_DEV_BRONZE_BD
+    
+    tables:
+      - name: agents
+        description: "Source table for agents data."
+        columns:
+          - name: agent_id
+            description: "Unique identifier for each agent."
+          - name: name
+            description: "Name of the agent."
+          - name: type
+            description: "Type of the agent."
+          - name: comission_rate
+            description: "Commission rate for the agent."
+          - name: active_status
+            description: "Indicates whether the agent is active."
+
+      - name: bookings
+        description: "Source table for hotel bookings."
+        columns:
+          - name: booking_id
+            description: "Unique identifier for each booking."
+          - name: customer_id
+            description: "Identifier for the customer making the booking."
+          - name: hotel_id
+            description: "Identifier for the booked hotel."
+          - name: room_id
+            description: "Identifier for the booked room."
+          - name: agent_id
+            description: "Identifier for the agent handling the booking."
+          - name: checkindate
+            description: "Check-in date for the booking."
+          - name: checkoutdate
+            description: "Check-out date for the booking."
+          - name: totalprice
+            description: "Total price for the booking."
+          - name: created_at
+            description: "Timestamp when the booking was created."
+
+      - name: hotels
+        description: "Source table for hotel details."
+        columns:
+          - name: hotel_id
+            description: "Unique identifier for each hotel."
+          - name: name
+            description: "Name of the hotel."
+          - name: address
+            description: "Address of the hotel."
+          - name: phone_number
+            description: "Contact number for the hotel."
+          - name: email
+            description: "Email address of the hotel."
+          - name: website
+            description: "Website URL of the hotel."
+          - name: stars
+            description: "Star rating of the hotel."
+          - name: checkintime
+            description: "Check-in time for the hotel."
+          - name: checkouttime
+            description: "Check-out time for the hotel."
+
+      - name: payments
+        description: "Source table for payment transactions."
+        columns:
+          - name: payment_id
+            description: "Unique identifier for each payment."
+          - name: booking_id
+            description: "Identifier for the associated booking."
+          - name: customer_id
+            description: "Identifier for the customer making the payment."
+          - name: payment_date
+            description: "Date when the payment was made."
+          - name: payment_amount
+            description: "Amount of the payment."
+          - name: payment_method
+            description: "Method used for the payment."
+          - name: payment_status
+            description: "Status of the payment (e.g., completed, pending)."
+
+      - name: reviews
+        description: "Source table for customer reviews."
+        columns:
+          - name: review_id
+            description: "Unique identifier for each review."
+          - name: customer_id
+            description: "Identifier for the customer submitting the review."
+          - name: hotel_id
+            description: "Identifier for the reviewed hotel."
+          - name: review
+            description: "Text of the review."
+          - name: rating
+            description: "Rating given by the customer."
+          - name: review_date
+            description: "Date when the review was submitted."
+
+      - name: rooms
+        description: "Source table for hotel rooms."
+        columns:
+          - name: room_id
+            description: "Unique identifier for each room."
+          - name: room_number
+            description: "Room number in the hotel."
+          - name: hotel_id
+            description: "Identifier for the hotel the room belongs to."
+          - name: price
+            description: "Price of the room."
+          - name: type
+            description: "Type of the room (e.g., single, double)."
+          - name: status
+            description: "Current status of the room (e.g., available, occupied)."
+
+      - name: customers
+        description: "Source table for customer details."
+        columns:
+          - name: customer_id
+            description: "Unique identifier for each customer."
+          - name: first_name
+            description: "First name of the customer."
+          - name: last_name
+            description: "Last name of the customer."
+          - name: email
+            description: "Email address of the customer."
+          - name: phone_number
+            description: "Contact number for the customer."
+          - name: address
+            description: "Address of the customer."
+          - name: dateofbirth
+            description: "Date of birth of the customer."
+          - name: gender
+            description: "Gender of the customer."
