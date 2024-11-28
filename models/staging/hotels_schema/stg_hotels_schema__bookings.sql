@@ -1,7 +1,6 @@
 {{ config(materialized='view') }}
 
-with
-
+with 
 source as (
 
     select * from {{ source('hotels_schema', 'bookings') }}

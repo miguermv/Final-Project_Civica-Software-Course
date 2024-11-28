@@ -4,14 +4,14 @@ with
 
 source as (
 
-    select * from {{ source('hotels_schema', 'payments') }}
+    select * from {{ source('hotels_schema', 'bookings') }}
 
 ),
 
 renamed as (
 
     select
-        {{ dbt_utils.generate_surrogate_key(['payment_id']) }}  as payment_id,
+        {{ dbt_utils.generate_surrogate_key(['booking_id', 'customer_id']) }}  as payment_id,
         {{ dbt_utils.generate_surrogate_key(['booking_id']) }}  as booking_id,
         {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as customer_id,
         payment_date::DATE                                      as payment_date,
