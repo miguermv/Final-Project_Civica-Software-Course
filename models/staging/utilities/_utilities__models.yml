@@ -68,6 +68,7 @@ models:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 4]
+              quote: false
       - name: quarter_start_date
         description: "Start date of the quarter."
         tests:
@@ -85,14 +86,14 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [true, false]
+              values: [True, False]
               quote: false
       - name: is_workday
         description: "Indicator if the date is a workday (true/false)."
         tests:
           - not_null
           - accepted_values:
-              values: [true, false]
+              values: [True, False]
               quote: false
       - name: holiday_type_en
         description: "Translated type of the holiday."

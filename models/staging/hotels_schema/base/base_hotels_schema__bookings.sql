@@ -1,9 +1,20 @@
+{{ config(
+    materialized='incremental',
+    unique_key = 'booking_id'
+    ) 
+}}
 
 with 
 
 source as (
 
     select * from {{ source('hotels_schema', 'bookings') }}
+    
+{% if is_incremental() %}
+
+    WHERE _fivetran_synced > (SELECT MAX(_fivetran_synced) FROM {{ this }} )
+
+{% endif %}
 
 ),
 

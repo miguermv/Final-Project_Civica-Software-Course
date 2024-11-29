@@ -1,3 +1,9 @@
+--Configuro este staging como table porque le añado un nuevo registro que no existe en el source
+{{ config(
+    materialized='table' 
+    )
+}}
+
 with 
 
 source as (
@@ -26,8 +32,8 @@ from renamed
 UNION ALL --Union de un nuevo registro para poder enlazar los registros vacios en bookings/payments
 
 select
-    {{ dbt_utils.generate_surrogate_key(["'no_discount'"]) }} as discount_id,
-    'no_discount'                                              as discount_name,
+    {{ dbt_utils.generate_surrogate_key(["'NODISCOUNT'"]) }}  as discount_id,
+    'NODISCOUNT'                                              as discount_name,
     0                                                          as discount_percentage,
     'No discount'                                              as discount_desc,
     'Active'                                                   as discount_status,

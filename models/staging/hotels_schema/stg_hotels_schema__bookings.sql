@@ -1,9 +1,19 @@
-{{ config(materialized='view') }}
+{{ config(
+    materialized='incremental',
+    unique_key = 'booking_id'
+    ) 
+}}
 
 with 
 source as (
 
     select * from {{ ref('base_hotels_schema__bookings') }}
+
+{% if is_incremental() %}
+
+    WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
+
+{% endif %}
 
 ),
 

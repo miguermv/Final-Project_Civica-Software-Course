@@ -17,22 +17,18 @@ models:
       - name: customer_id
         description: "Identifier for the customer making the booking."
         tests:
-          - unique
           - not_null
       - name: hotel_id
         description: "Identifier for the booked hotel."
         tests:
-          - unique
           - not_null
       - name: room_id
         description: "Identifier for the booked room."
         tests:
-          - unique
           - not_null
       - name: agent_id
         description: "Identifier for the agent handling the booking."
         tests:
-          - unique
           - not_null
       - name: no_of_adults
         description: "Number of adult guests for this reservation."

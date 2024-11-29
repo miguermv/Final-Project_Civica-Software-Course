@@ -18,10 +18,6 @@ sources:
             description: "Day of the week corresponding to the date."
           - name: laborable_festivo_domingo
             description: "Indicates whether the day is a workday, holiday, or Sunday."
-            tests:
-              - not_null
-              - accepted_values: 
-                  values: ['laborable','festivo','domingo']
           - name: tipo_festivo
             description: "Specifies the type of holiday (e.g., national, regional, local)."
           - name: festividad

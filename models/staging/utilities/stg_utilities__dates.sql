@@ -37,11 +37,11 @@ stg_utilities__dates AS (
         quarter_of_year,
         quarter_start_date,
         quarter_end_date,
-        year_number
-        is_holiday,
-        is_workday,
-        {{ cortex_translate('holiday_type') }} as holiday_type_en,
-        {{ cortex_translate('holiday_desc') }} as holiday_desc_en,
+        year_number,
+        {{ ifvalue_to_bool('laborable_festivo_domingo', "'festivo'") }}     as is_holiday,
+        {{ ifvalue_to_bool('laborable_festivo_domingo', "'laborable'") }}   as is_workday,
+        {{ cortex_translate('holiday_type') }}                              as holiday_type_en,
+        {{ cortex_translate('holiday_desc') }}                              as holiday_desc_en,
 
     FROM base_dates dates
     LEFT JOIN base_holidays holidays

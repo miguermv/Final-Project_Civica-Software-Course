@@ -1,0 +1,8 @@
+version: 2
+
+models:
+  - name: prueba 
+    description: "Model that integrates date and holiday information, including translations and workday classifications."
+    columns:
+      - name: date_id
+      - name: payments_id

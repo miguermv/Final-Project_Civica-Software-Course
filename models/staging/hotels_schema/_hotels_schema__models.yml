@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: stg_bookings
+    description: >
+      Este modelo representa la tabla staging de reservas, la cual contiene información sobre las reservas realizadas en diferentes hoteles, incluyendo detalles del cliente, habitación, y fechas de estancia.
+    columns:
+      - name: booking_id
+        description: Identificador único de la reserva.
+
+      - name: customer_id
+        description: Identificador del cliente que realizó la reserva.
+
+      - name: hotel_id
+        description: Identificador del hotel donde se realizó la reserva.
+
+      - name: room_id
+        description: Identificador de la habitación asignada para la reserva.
+
+      - name: agent_id
+        description: Identificador del agente que procesó la reserva (si aplica).
+
+      - name: no_of_adults
+        description: Número de adultos incluidos en la reserva.
+        tests:
+          - dbt_utils.accepted_range:
+                min_value: 0
+                max_value: 5
+
+      - name: no_of_children
+        description: Número de niños incluidos en la reserva.
+        tests:
+          - dbt_utils.accepted_range:
+                min_value: 0
+                max_value: 5
+
+      - name: required_car_parking
+        description: Indica si se requiere espacio de aparcamiento (1 para sí, 0 para no).
+
+      - name: checkInDate
+        description: Fecha de entrada del cliente al hotel.
+
+      - name: checkOutDate
+        description: Fecha de salida del cliente del hotel.
+
+      - name: created_at
+        description: Fecha de creación del registro de la reserva.
+
+      - name: datetimeload_utc
+        description: Fecha y hora en UTC en la que se cargó el dato en la base de datos.
+        tests:
+          - not_null
