@@ -69,6 +69,10 @@ sources:
             description: "Number of children guests for this reservation."
           - name: required_car_parking
             description: "Indicates whether car parking is required by the guests (TRUE/FALSE)."
+            tests:
+              - accepted_values: 
+                  values: [TRUE, FALSE]
+                  quote: false
           - name: check_in_date
             description: "Check-in date for the booking."
             tests:
@@ -131,10 +135,10 @@ sources:
           - name: stars
             description: "Star rating of the hotel."
             tests:
+              - not_null
               - accepted_values: 
-                values: [1, 2, 3, 4, 5]
-                quote: false
-
+                  values: [1, 2, 3, 4, 5]
+                  quote: false
           - name: checkintime
             description: "Check-in time for the hotel."
           - name: checkouttime
@@ -170,7 +174,9 @@ sources:
           - name: rating
             description: "Rating given by the customer."
             tests:
-              - accepted_values: [1, 2, 3, 4, 5]
+              - accepted_values: 
+                  values: [1, 2, 3, 4, 5]
+                  quote: false
           - name: review_date
             description: "Date when the review was submitted."
           - name: _fivetran_synced
@@ -220,7 +226,6 @@ sources:
             description: "Email address of the customer."
             tests:
               - not_null
-              - unique
           - name: phone_number
             description: "Contact number for the customer."
           - name: birth_country

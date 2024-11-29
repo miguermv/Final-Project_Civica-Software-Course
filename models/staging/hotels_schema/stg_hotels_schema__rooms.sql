@@ -15,8 +15,9 @@ renamed as (
         room_number::INT                                    as room_number,
         price::DECIMAL(10,2)                                as price_per_night,
         type::VARCHAR(30)                                   as room_type,
-        status::VARCHAR(30)                                 as room_status
-        --AÑADIR CAMPOS SNAPSHOT
+        status::VARCHAR(30)                                 as room_status,
+        dbt_valid_from                                      as valid_from,
+        dbt_valid_to                                        as valid_to
     from source
 
 )
