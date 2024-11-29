@@ -7,45 +7,84 @@ sources:
     
     tables:
       - name: agents
+        loaded_at_field: _fivetran_synced
         description: "Source table for agents data."
         columns:
           - name: agent_id
             description: "Unique identifier for each agent."
+            tests:
+              - unique
+              - not_null
           - name: name
             description: "Name of the agent."
+            tests:
+              - not_null
           - name: type
             description: "Type of the agent."
+            tests:
+              - not_null
           - name: comission_rate
             description: "Commission rate for the agent."
           - name: active_status
             description: "Indicates whether the agent is active."
-          - name: _fivestran_synced
+            tests:
+              - not_null
+          - name: _fivetran_synced
             description: "Date and time of the last data synchronization by Fivetran."
 
       - name: bookings
+        loaded_at_field: _fivetran_synced
         description: "Source table for hotel bookings."
         columns:
           - name: booking_id
             description: "Unique identifier for each booking."
+            tests:
+              - unique
+              - not_null
           - name: customer_id
             description: "Identifier for the customer making the booking."
+            tests:
+              - not_null
+              - relationships:
+                  to: source('hotels_schema', 'customers')
+                  field: customer_id
           - name: hotel_id
             description: "Identifier for the booked hotel."
-          - name: room_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('hotels_schema', 'hotels')
+                  field: hotel_id
+          - name: room_number
             description: "Identifier for the booked room."
           - name: agent_id
             description: "Identifier for the agent handling the booking."
-          - name: checkindate
+            tests:
+              - relationships:
+                  to: source('hotels_schema', 'agents')
+                  field: agent_id
+          - name: no_of_adults
+            description: "Number of adult guests for this reservation."
+          - name: no_of_children
+            description: "Number of children guests for this reservation."
+          - name: required_car_parking
+            description: "Indicates whether car parking is required by the guests (TRUE/FALSE)."
+          - name: check_in_date
             description: "Check-in date for the booking."
-          - name: checkoutdate
+            tests:
+              - not_null
+          - name: check_out_date
             description: "Check-out date for the booking."
-          - name: totalprice
-            description: "Total price for the booking."
+            tests:
+              - not_null
+             # - validate_date_order:
+             #    start_date_column: check_in_date
+             #    end_date_column: check_out_date
           - name: created_at
             description: "Timestamp when the booking was created."
-          - name: basePrice
+          - name: base_Price
             description: "Total price of the hotel stay."
-          - name: finalPrice
+          - name: final_Price
             description: "Total price of the hotel stay with discount applied."
           - name: discount_code
             description: "Name of the discount."
@@ -59,16 +98,24 @@ sources:
             description: "Method used for the payment."
           - name: payment_status
             description: "Status of the payment (e.g., completed, pending)."
-          - name: _fivestran_synced
+          - name: _fivetran_synced
             description: "Date and time of the last data synchronization by Fivetran."
 
+
+
       - name: hotels
+        loaded_at_field: _fivetran_synced
         description: "Source table for hotel details."
         columns:
           - name: hotel_id
             description: "Unique identifier for each hotel."
+            tests:
+              - unique
+              - not_null
           - name: name
             description: "Name of the hotel."
+            tests:
+              - not_null
           - name: country
             description: "Country of the hotel."
           - name: city
@@ -83,41 +130,70 @@ sources:
             description: "Website URL of the hotel."
           - name: stars
             description: "Star rating of the hotel."
+            tests:
+              - accepted_values: 
+                values: [1, 2, 3, 4, 5]
+                quote: false
+
           - name: checkintime
             description: "Check-in time for the hotel."
           - name: checkouttime
             description: "Check-out time for the hotel."
-          - name: _fivestran_synced
+          - name: _fivetran_synced
             description: "Date and time of the last data synchronization by Fivetran."
 
-
       - name: reviews
+        loaded_at_field: _fivetran_synced
         description: "Source table for customer reviews."
         columns:
           - name: review_id
             description: "Unique identifier for each review."
+            tests:
+              - unique
+              - not_null
           - name: customer_id
             description: "Identifier for the customer submitting the review."
+            tests:
+              - not_null
+              - relationships:
+                  to: source('hotels_schema', 'customers')
+                  field: customer_id
           - name: hotel_id
             description: "Identifier for the reviewed hotel."
+            tests:
+              - not_null
+              - relationships:
+                  to: source('hotels_schema', 'hotels')
+                  field: hotel_id
           - name: review
             description: "Text of the review."
           - name: rating
             description: "Rating given by the customer."
+            tests:
+              - accepted_values: [1, 2, 3, 4, 5]
           - name: review_date
             description: "Date when the review was submitted."
-          - name: _fivestran_synced
+          - name: _fivetran_synced
             description: "Date and time of the last data synchronization by Fivetran."
 
       - name: rooms
+        loaded_at_field: _fivestran_synced
         description: "Source table for hotel rooms."
         columns:
           - name: room_id
             description: "Unique identifier for each room."
+            tests:
+              - unique
+              - not_null
           - name: room_number
             description: "Room number in the hotel."
           - name: hotel_id
             description: "Identifier for the hotel the room belongs to."
+            tests:
+              - not_null
+              - relationships:
+                  to: source('hotels_schema', 'hotels')
+                  field: hotel_id
           - name: price
             description: "Price of the room."
           - name: type
@@ -128,16 +204,23 @@ sources:
             description: "Date and time of the last data synchronization by Fivetran."
 
       - name: customers
+        loaded_at_field: _fivestran_synced
         description: "Source table for customer details."
         columns:
           - name: customer_id
             description: "Unique identifier for each customer."
+            tests:
+              - unique
+              - not_null
           - name: first_name
             description: "First name of the customer."
           - name: last_name
             description: "Last name of the customer."
           - name: email
             description: "Email address of the customer."
+            tests:
+              - not_null
+              - unique
           - name: phone_number
             description: "Contact number for the customer."
           - name: birth_country
@@ -151,17 +234,25 @@ sources:
           - name: _fivestran_synced
             description: "Date and time of the last data synchronization by Fivetran."
 
-
       - name: discounts
-        description: "Source table for customer details."
+        loaded_at_field: _fivestran_synced
+        description: "Source table for discount details."
         columns:
           - name: discount_name
-            description: "Unique identifier for each customer."
+            description: "Name of the discount."
+            tests:
+              - unique
+              - not_null
           - name: discount_rate
-            description: "First name of the customer."
+            description: "Percentage of the discount."
+            tests:
+              - not_null
+              - dbt_utils.accepted_range:
+                  min_value: 0
+                  max_value: 100
           - name: discount_desc
-            description: "Last name of the customer."
+            description: "Description of the discount."
           - name: discount_status
-            description: "Email address of the customer."
+            description: "Status of the discount."
           - name: _fivestran_synced
             description: "Date and time of the last data synchronization by Fivetran."

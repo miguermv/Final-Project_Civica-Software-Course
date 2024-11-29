@@ -14,7 +14,7 @@ renamed as (
         type::VARCHAR(30)                                       as type,
         comission_rate::DECIMAL(10,2)                           as comission_rate,
         active_status::BOOLEAN                                  as active_status,
-        _fivestran_synced::TIMESTAMP_TZ                         as datetimeload_utc
+        _fivetran_synced::TIMESTAMP_TZ                          as datetimeload_utc
     from source
     
 )

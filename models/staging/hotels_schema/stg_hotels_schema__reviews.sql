@@ -15,7 +15,8 @@ renamed as (
         {{ dbt_utils.generate_surrogate_key(['hotel_id']) }}    as hotel_id,
         review::VARCHAR(2000)                                   as review,
         rating::INT                                             as rating,
-        review_date::DATE                                       as review_date
+        review_date::DATE                                       as review_date,
+        _fivetran_synced::TIMESTAMP_TZ                          as datetimeload_utc
     from source
 
 )

@@ -3,22 +3,25 @@
 with 
 source as (
 
-    select * from {{ source('hotels_schema', 'bookings') }}
+    select * from {{ ref('base_hotels_schema__bookings') }}
 
 ),
 
 renamed as (
 
     select
-        {{ dbt_utils.generate_surrogate_key(['booking_id']) }}  as booking_id,
-        {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as customer_id,
-        {{ dbt_utils.generate_surrogate_key(['hotel_id']) }}    as hotel_id,
-        {{ dbt_utils.generate_surrogate_key(['room_id']) }}     as room_id,
-        {{ dbt_utils.generate_surrogate_key(['agent_id']) }}    as agent_id,
-        checkindate::DATE                                       as checkInDate,
-        checkoutdate::DATE                                      as checkOutDate,
-        totalprice::DECIMAL(10,2)                               as totalPrice,
-        created_at::DATE                                        as created_at
+        booking_id,
+        customer_id,
+        hotel_id,
+        room_id,
+        agent_id,
+        no_of_adults,
+        no_of_children,
+        required_car_parking,
+        checkInDate,
+        checkOutDate,
+        created_at,
+        datetimeload_utc
     from source
     
 )

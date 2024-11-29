@@ -3,7 +3,7 @@
 with 
 source as (
 
-    select * from {{ source('hotels_schema', 'rooms') }}
+    select * from {{ ref('snap_hotels_schema__rooms') }}
 
 ),
 
@@ -16,6 +16,7 @@ renamed as (
         price::DECIMAL(10,2)                                as price_per_night,
         type::VARCHAR(30)                                   as room_type,
         status::VARCHAR(30)                                 as room_status
+        --AÑADIR CAMPOS SNAPSHOT
     from source
 
 )
