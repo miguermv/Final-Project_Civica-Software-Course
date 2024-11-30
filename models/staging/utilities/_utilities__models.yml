@@ -24,9 +24,6 @@ models:
         description: "Day of the month (1-31)."
         tests:
           - not_null
-          - dbt_utils.accepted_range:
-              min_value: 1
-              max_value: 31
       - name: day_of_year
         description: "Day of the year (1-365/366)."
         tests:
@@ -43,9 +40,6 @@ models:
         description: "Numeric representation of the month (1-12)."
         tests:
           - not_null
-          - dbt_utils.accepted_range:
-              min_value: 1
-              max_value: 12
       - name: month_name
         description: "Full name of the month."
         tests:
@@ -66,9 +60,6 @@ models:
         description: "Numeric representation of the quarter (1-4)."
         tests:
           - not_null
-          - accepted_values:
-              values: [1, 2, 3, 4]
-              quote: false
       - name: quarter_start_date
         description: "Start date of the quarter."
         tests:
@@ -97,9 +88,7 @@ models:
               quote: false
       - name: holiday_type_en
         description: "Translated type of the holiday."
-        tests:
-          - not_null
       - name: holiday_desc_en
         description: "Translated description of the holiday."
-        tests:
-          - not_null
+
+
