@@ -1,0 +1,330 @@
+version: 2
+
+models:
+  - name: dim_agents
+    description: >
+      This model calculates key metrics for hotel agents, including their revenue 
+      and booking success rate based on the total number of bookings. It combines 
+      data from agents, bookings, and payments to generate these insights.
+    columns:
+      - name: agent_id
+        description: Unique identifier for the agent.
+      - name: name
+        description: Name of the agent.
+      - name: type
+        description: The type of agent, representing their category or specialization.
+      - name: comission_rate
+        description: The commission rate (as a percentage) assigned to the agent.
+      - name: active_status
+        description: Indicates whether the agent is currently active or inactive.
+      - name: agent_revenue
+        description: |
+          Total revenue earned by the agent based on their commission rate 
+          and the payments made for bookings.
+        tests:
+          - not_null
+          - positive_values
+      - name: booking_success_rate
+        description: |
+          Percentage of total bookings handled by the agent, calculated as 
+          (number of bookings for the agent / total bookings) * 100.
+        tests:
+          - not_null
+          - positive_values
+
+
+  - name: dim_customers
+    description: >
+      This model provides a comprehensive view of customer details, including 
+      demographic information such as age, gender, and address. The model calculates 
+      the current age of the customer based on their date of birth.
+    columns:
+      - name: customer_id
+        description: Unique identifier for the customer.
+        tests:
+          - not_null
+          - unique
+      - name: first_name
+        description: First name of the customer.
+      - name: last_name
+        description: Last name of the customer.
+      - name: email
+        description: Email address of the customer.
+      - name: phone_number
+        description: Phone number of the customer.
+      - name: birth_country
+        description: Country of birth of the customer.
+      - name: address
+        description: Residential address of the customer.
+      - name: customer_age
+        description: >
+          Current age of the customer, calculated as the difference between the 
+          current year and the year of birth.
+        tests:
+          - not_null
+          - numeric
+      - name: dateofbirth
+        description: Date of birth of the customer.
+        tests:
+          - not_null
+      - name: gender
+        description: Gender of the customer (e.g., Male, Female, Other).
+      - name: valid_from
+        description: Start date for the validity of the customer's record.
+      - name: valid_to
+        description: End date for the validity of the customer's record.
+
+
+  - name: dim_dates  
+    description: "A dimension table providing detailed date attributes and season type classification."
+    columns:
+      - name: date_id
+        description: "Unique identifier for each date."
+      - name: day_of_week_name
+        description: "Full name of the day of the week."
+      - name: day_of_week_name_short
+        description: "Abbreviated name of the day of the week."
+      - name: day_of_week
+        description: "Numeric representation of the day of the week (1=Monday, 7=Sunday)."
+      - name: day_of_month
+        description: "Numeric representation of the day of the month."
+      - name: day_of_year
+        description: "Numeric representation of the day of the year (1-365/366)."
+      - name: week_start_date
+        description: "Start date of the week (Monday)."
+      - name: week_end_date
+        description: "End date of the week (Sunday)."
+      - name: month_of_year
+        description: "Numeric representation of the month of the year (1-12)."
+      - name: month_name
+        description: "Full name of the month."
+      - name: month_name_short
+        description: "Abbreviated name of the month."
+      - name: month_start_date
+        description: "Start date of the month."
+      - name: month_end_date
+        description: "End date of the month."
+      - name: quarter_of_year
+        description: "Numeric representation of the quarter of the year (1-4)."
+      - name: quarter_start_date
+        description: "Start date of the quarter."
+      - name: quarter_end_date
+        description: "End date of the quarter."
+      - name: year_number
+        description: "Four-digit representation of the year."
+      - name: is_weekend
+        description: "Indicates if the date falls on a weekend (true/false)."
+      - name: is_holiday
+        description: "Indicates if the date is a public holiday (true/false)."
+      - name: is_workday
+        description: "Indicates if the date is a workday (true/false)."
+      - name: holiday_type_en
+        description: "Type of holiday (e.g., national, regional)."
+      - name: holiday_desc_en
+        description: "Description of the holiday."
+      - name: season_type
+        description: "Season classification based on date."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Spring', 'Summer', 'Fall', 'Winter']  
+
+
+  - name: dim_discounts
+    description: "A table containing details about hotel discounts."
+    columns:
+      - name: discount_id
+        description: "Unique identifier for each discount."
+      - name: discount_name
+        description: "Name of the discount."
+      - name: discount_percentage
+        description: "Percentage value of the discount."
+      - name: discount_desc
+        description: "Description of the discount."
+      - name: discount_status
+        description: "Current status of the discount (e.g., active, inactive)."
+      - name: discount_active_flag
+        description: "Flag indicating whether the discount is active (true/false)."
+
+
+  - name: dim_hotels
+    description: "A table that consolidates hotel information with total revenue generated from bookings."
+    columns:
+      - name: hotel_id
+        description: "Unique identifier for each hotel."
+      - name: hotel_name
+        description: "Name of the hotel."
+      - name: hotel_address
+        description: "Address of the hotel."
+      - name: hotel_phone_number
+        description: "Phone number of the hotel."
+      - name: hotel_email
+        description: "Email address of the hotel."
+      - name: hotel_website
+        description: "Website of the hotel."
+      - name: hotel_stars
+        description: "Star rating of the hotel."
+      - name: checkInTime
+        description: "Standard check-in time for the hotel."
+      - name: checkOutTime
+        description: "Standard check-out time for the hotel."
+      - name: total_hotel_revenue
+        description: "Total revenue generated by the hotel from bookings."
+        tests:
+          - not_null
+          - positive_values
+
+
+  - name: dim_rooms
+    description: "A table that consolidates room details with total earnings per room based on bookings and agent commissions."
+    columns:
+      - name: room_id
+        description: "Unique identifier for each room."
+      - name: hotel_id
+        description: "Unique identifier for the hotel associated with the room."
+      - name: room_number
+        description: "Room number within the hotel."
+      - name: price_per_night
+        description: "Price per night for the room."
+      - name: room_type
+        description: "Type of the room (e.g., single, double, suite)."
+      - name: room_status
+        description: "Current status of the room (e.g., available, occupied, under maintenance)."
+      - name: valid_from
+        description: "Start date from which the room details are valid."
+      - name: valid_to
+        description: "End date until which the room details are valid."
+      - name: total_earned_per_room
+        description: "Total earnings for the room based on its bookings and agent commissions."
+        tests:
+          - not_null
+          - positive_values
+
+
+  - name: fct_bookings
+    description: "An incremental model that processes hotel booking data, including customer type and stay duration calculations."
+    columns:
+      - name: booking_id
+        description: "Unique identifier for each booking."
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        description: "Unique identifier for the customer associated with the booking."
+      - name: hotel_id
+        description: "Unique identifier for the hotel associated with the booking."
+      - name: room_id
+        description: "Unique identifier for the room associated with the booking."
+      - name: agent_id
+        description: "Unique identifier for the agent managing the booking."
+      - name: no_of_adults
+        description: "Number of adults in the booking."
+      - name: no_of_children
+        description: "Number of children in the booking."
+      - name: customer_type
+        description: "Categorization of the customer based on the number of adults and children."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Solo Traveler', 'Couple', 'Group', 'Family', 'Unknown']
+      - name: required_car_parking
+        description: "Indicates if car parking is required for the booking (true/false)."
+      - name: car_parking_requested_flag
+        description: "Binary flag indicating if car parking was requested (1 if true, 0 otherwise)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+              quote: false
+      - name: checkInDate
+        description: "Date when the customer is expected to check in."
+      - name: checkOutDate
+        description: "Date when the customer is expected to check out."
+      - name: stay_duration
+        description: "Total number of days the customer stays in the hotel."
+        tests:
+          - not_null
+          - numeric
+      - name: created_at
+        description: "Timestamp when the booking record was created."
+
+
+  - name: fct_payments
+    description: "An incremental model that consolidates payment data, including discounts and agent commissions."
+    columns:
+      - name: payment_id
+        description: "Unique identifier for each payment."
+        tests:
+          - not_null
+          - unique
+      - name: booking_id
+        description: "Unique identifier for the associated booking."
+        tests:
+          - not_null
+      - name: customer_id
+        description: "Unique identifier for the customer who made the payment."
+      - name: discount_id
+        description: "Unique identifier for the discount applied to the booking."
+      - name: base_price_euros
+        description: "Original base price of the booking in euros before discounts."
+        tests:
+          - not_null
+          - numeric
+      - name: final_price_euros
+        description: "Final price of the booking in euros after discounts."
+        tests:
+          - not_null
+          - numeric
+      - name: discount_applied
+        description: "Total discount applied to the booking, calculated as the difference between base and final price."
+        tests:
+          - numeric
+      - name: payment_date
+        description: "Date when the payment was made."
+        tests:
+          - not_null
+      - name: payment_amount
+        description: "Amount of money paid for the booking."
+        tests:
+          - not_null
+          - numeric
+      - name: payment_method
+        description: "Method used for payment (e.g., credit card, PayPal, etc.)."
+      - name: payment_status
+        description: "Current status of the payment (e.g., completed, pending, failed)."
+      - name: total_revenue_euros
+        description: "Total revenue generated from the payment, considering agent commissions."
+        tests:
+          - not_null
+          - numeric
+
+
+  - name: fct_reviews
+    description: "An incremental model that processes customer reviews, including sentiment analysis and ratings."
+    columns:
+      - name: review_id
+        description: "Unique identifier for each review."
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        description: "Unique identifier for the customer who submitted the review."
+      - name: hotel_id
+        description: "Unique identifier for the hotel associated with the review."
+      - name: review
+        description: "Text content of the customer review."
+      - name: sentiment_category
+        description: "Sentiment category of the review, derived using sentiment analysis."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Positive', 'Neutral', 'Negative']  
+      - name: rating
+        description: "Numeric rating provided by the customer (e.g., 1-5 stars)."
+        tests:
+          - not_null
+          - numeric
+      - name: review_date
+        description: "Date when the review was submitted."
+        tests:
+          - not_null

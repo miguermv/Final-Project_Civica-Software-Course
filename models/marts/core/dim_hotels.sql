@@ -31,6 +31,7 @@ renamed as (
         hotel_stars,
         checkInTime,
         checkOutTime,
+        -- Cálculo del total ganado por hotel
         total_hotel_revenue::DECIMAL(10,2) as total_hotel_revenue
     from hotels h
     LEFT JOIN bookings b
