@@ -28,6 +28,7 @@ renamed as (
         no_of_adults,
         no_of_children,
         required_car_parking,
+        base_price_euros,
         checkInDate,
         checkOutDate,
         created_at,

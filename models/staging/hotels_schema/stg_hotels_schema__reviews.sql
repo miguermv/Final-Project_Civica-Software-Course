@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key = 'booking_id'
+    unique_key = 'review_id'
     ) 
 }}
 

@@ -28,7 +28,7 @@ renamed as (
         base_price_euros,
         final_price_euros,
         payment_date,
-        payment_amount,
+        {{ control_null_or_empty('payment_amount', '0') }} as payment_amount,
         payment_method,
         payment_status,
         datetimeload_utc
