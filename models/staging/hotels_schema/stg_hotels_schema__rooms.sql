@@ -1,9 +1,12 @@
-{{ config(materialized='view') }}
+{{ config(
+    materialized='view'
+    )
+}}
 
 with 
 source as (
 
-    select * from {{ source('hotels_schema', 'rooms') }}
+    select * from {{ ref('snap_hotels_schema__rooms') }}
 
 ),
 
@@ -15,7 +18,9 @@ renamed as (
         room_number::INT                                    as room_number,
         price::DECIMAL(10,2)                                as price_per_night,
         type::VARCHAR(30)                                   as room_type,
-        status::VARCHAR(30)                                 as room_status
+        status::VARCHAR(30)                                 as room_status,
+        dbt_valid_from                                      as valid_from,
+        dbt_valid_to                                        as valid_to
     from source
 
 )

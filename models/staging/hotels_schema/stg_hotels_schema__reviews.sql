@@ -1,9 +1,20 @@
-{{ config(materialized='view') }}
+{{ config(
+    materialized='incremental',
+    unique_key = 'booking_id'
+    ) 
+}}
 
 with 
+
 source as (
 
     select * from {{ source('hotels_schema', 'reviews') }}
+
+{% if is_incremental() %}
+
+    WHERE _fivetran_synced > (SELECT MAX(_fivetran_synced) FROM {{ this }} )
+
+{% endif %}
 
 ),
 
@@ -13,9 +24,10 @@ renamed as (
         {{ dbt_utils.generate_surrogate_key(['review_id']) }}   as review_id,
         {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as customer_id,
         {{ dbt_utils.generate_surrogate_key(['hotel_id']) }}    as hotel_id,
-        review::VARCHAR(2000)                                   as review,
+        review::VARCHAR(10000)                                   as review,
         rating::INT                                             as rating,
-        review_date::DATE                                       as review_date
+        review_date::DATE                                       as review_date,
+        _fivetran_synced::TIMESTAMP_TZ                          as datetimeload_utc
     from source
 
 )

@@ -1,0 +1,94 @@
+version: 2
+
+models:
+  - name: stg_utilities__dates 
+    description: "Model that integrates date and holiday information, including translations and workday classifications."
+    config:
+      materialized: table
+      pre_hook: "ALTER ACCOUNT SET CORTEX_ENABLED_CROSS_REGION = 'AWS_EU';"
+    columns:
+      - name: date_id
+        description: "Unique identifier for each date."
+        tests:
+          - not_null
+          - unique
+      - name: day_of_week_name
+        description: "Full name of the day of the week."
+        tests:
+          - not_null
+      - name: day_of_week_name_short
+        description: "Short name of the day of the week."
+        tests:
+          - not_null
+      - name: day_of_month
+        description: "Day of the month (1-31)."
+        tests:
+          - not_null
+      - name: day_of_year
+        description: "Day of the year (1-365/366)."
+        tests:
+          - not_null
+      - name: week_start_date
+        description: "Start date of the week."
+        tests:
+          - not_null
+      - name: week_end_date
+        description: "End date of the week."
+        tests:
+          - not_null
+      - name: month_of_year
+        description: "Numeric representation of the month (1-12)."
+        tests:
+          - not_null
+      - name: month_name
+        description: "Full name of the month."
+        tests:
+          - not_null
+      - name: month_name_short
+        description: "Short name of the month."
+        tests:
+          - not_null
+      - name: month_start_date
+        description: "Start date of the month."
+        tests:
+          - not_null
+      - name: month_end_date
+        description: "End date of the month."
+        tests:
+          - not_null
+      - name: quarter_of_year
+        description: "Numeric representation of the quarter (1-4)."
+        tests:
+          - not_null
+      - name: quarter_start_date
+        description: "Start date of the quarter."
+        tests:
+          - not_null
+      - name: quarter_end_date
+        description: "End date of the quarter."
+        tests:
+          - not_null
+      - name: year_number
+        description: "Year number (e.g., 2024)."
+        tests:
+          - not_null
+      - name: is_holiday
+        description: "Indicator if the date is a holiday (true/false)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [True, False]
+              quote: false
+      - name: is_workday
+        description: "Indicator if the date is a workday (true/false)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [True, False]
+              quote: false
+      - name: holiday_type_en
+        description: "Translated type of the holiday."
+      - name: holiday_desc_en
+        description: "Translated description of the holiday."
+
+

@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: utilities
+    schema: utilities
+    database: PROYECTO_DEV_BRONZE_BD
+    
+    tables:
+      - name: holidays_es
+        description: "Source table for holidays in Spain from 2013 to the present."
+        columns:
+          - name: fecha
+            description: "Date of the specific record."
+            tests:
+              - unique
+              - not_null
+          - name: dia_semana
+            description: "Day of the week corresponding to the date."
+          - name: laborable_festivo_domingo
+            description: "Indicates whether the day is a workday, holiday, or Sunday."
+          - name: tipo_festivo
+            description: "Specifies the type of holiday (e.g., national, regional, local)."
+          - name: festividad
+            description: "Description of the holiday for the date (e.g., 'New Year's Day'). Null if the day is a workday."
+

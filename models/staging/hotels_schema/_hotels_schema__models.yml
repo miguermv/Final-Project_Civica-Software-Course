@@ -1,0 +1,363 @@
+version: 2
+
+models:
+  - name: stg_hotels_schema__bookings
+    description: >
+      This model represents the staging table for bookings, which contains information about reservations made at various hotels, including customer details, room assignments, and stay dates.
+    config:
+      materialized: incremental
+      unique_key: booking_id
+    columns:
+      - name: booking_id
+        description: Unique identifier for the booking.
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Identifier for the customer who made the booking.
+      - name: hotel_id
+        description: Identifier for the hotel where the booking was made.
+      - name: room_id
+        description: Identifier for the room assigned to the booking.
+      - name: agent_id
+        description: Identifier for the agent who processed the booking.
+      - name: no_of_adults
+        description: Number of adults included in the booking.
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 5
+      - name: no_of_children
+        description: Number of children included in the booking.
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 5
+      - name: required_car_parking
+        description: Indicates if a parking space is required (TRUE/FALSE).
+      - name: checkInDate
+        description: Customer's check-in date at the hotel.
+      - name: checkOutDate
+        description: Customer's check-out date from the hotel.
+      - name: created_at
+        description: Record creation date for the booking.
+      - name: datetimeload_utc
+        description: Date and time in UTC when the data was loaded into the database.
+        tests:
+          - not_null
+
+
+  - name: stg_hotels_schema__payments
+    description: >
+      This model represents the staging table for payments, which processes and transforms payment-related information, 
+      including discounts, amounts, methods, and statuses, with support for incremental loading.
+    config:
+      materialized: incremental
+      unique_key: payment_id
+    columns:
+      - name: payment_id
+        description: "Unique surrogate key generated for each payment using booking and customer identifiers."
+        tests:
+          - not_null
+          - unique
+      - name: booking_id
+        description: "Unique identifier for the associated booking."
+        tests:
+          - not_null
+      - name: customer_id
+        description: "Unique identifier for the customer making the payment."
+        tests:
+          - not_null
+      - name: discount_id
+        description: >
+          "Identifier for the discount code applied to the payment. Defaults to 'NODISCOUNT' if no discount is specified."
+        tests:
+          - not_null
+          - relationships:
+              to: "ref('stg_hotels_schema__discounts')"
+              field: discount_id
+      - name: base_price_euros
+        description: "Base price of the booking in euros before discounts or additional charges."
+      - name: final_price_euros
+        description: "Final price of the booking in euros after applying discounts and additional charges."
+      - name: payment_date
+        description: "Date on which the payment was made."
+      - name: payment_amount
+        description: "Total amount paid in euros."
+      - name: payment_method
+        description: "Method used for the payment, such as credit card, bank transfer, or cash."
+      - name: payment_status
+        description: "Current status of the payment (e.g., completed, pending, failed)."
+      - name: datetimeload_utc
+        description: "Date and time in UTC when the payment record was loaded into the database."
+        tests:
+          - not_null
+
+
+  - name: stg_hotels_schema__agents
+    description: >
+      This model represents the staging table for hotel agents, processing and transforming information about agents, 
+      including their details, type, commission rate, and active status.
+    config:
+      materialized: view
+      unique_key: agent_id
+    columns:
+      - name: agent_id
+        description: >
+          "Unique surrogate key generated for each agent based on the original agent identifier."
+        tests:
+          - not_null
+          - unique
+      - name: name
+        description: "Name of the agent."
+        tests:
+          - not_null
+      - name: type
+        description: "Type of the agent (e.g., individual, corporate)."
+        tests:
+          - not_null
+      - name: comission_rate
+        description: >
+          "Commission rate agreed with the agent, represented as a decimal percentage (e.g., 5.00 for 5%)."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0.0
+              max_value: 100.0
+      - name: active_status
+        description: >
+          "Indicates whether the agent is currently active (true) or inactive (false)."
+        tests:
+          - not_null
+      - name: datetimeload_utc
+        description: >
+          "Timestamp in UTC indicating when the agent record was last synchronized from the source system."
+        tests:
+          - not_null
+
+
+  - name: stg_hotels_schema__customers
+    description: >
+      This model represents the staging table for customers, transforming and organizing customer details 
+      such as personal information, contact details, and address information.
+    config:
+      materialized: view
+      unique_key: customer_id
+    columns:
+      - name: customer_id
+        description: >
+          "Unique surrogate key generated for each customer based on the original customer identifier."
+        tests:
+          - not_null
+          - unique
+      - name: first_name
+        description: "First name of the customer."
+        tests:
+          - not_null
+      - name: last_name
+        description: "Last name of the customer."
+        tests:
+          - not_null
+      - name: email
+        description: "Email address of the customer."
+        tests:
+          - not_null
+      - name: phone_number
+        description: >
+          "Phone number of the customer, trimmed of leading and trailing spaces."
+      - name: birth_country
+        description: "Country where the customer was born."
+      - name: address
+        description: "Customer's address."
+      - name: dateofbirth
+        description: >
+          "Date of birth of the customer, formatted as a date (DD/MM/YYYY)."
+      - name: gender
+        description: >
+          "Gender of the customer, typically represented as 'Male,' 'Female,' or other."
+      - name: valid_from
+        description: >
+          "Timestamp indicating when the record became valid in the data system."
+        tests:
+          - not_null
+      - name: valid_to
+        description: >
+          "Timestamp indicating when the record became invalid or expired in the data system."
+
+
+  - name: stg_hotels_schema__discounts
+    description: >
+      This model represents the staging table for discounts, organizing and transforming information 
+      about discounts in the hotel booking system, including their identifiers, rates, and active statuses.
+    config:
+      materialized: view
+      unique_key: discount_id
+    columns:
+      - name: discount_id
+        description: >
+          "Unique surrogate key generated for each discount based on the discount name."
+        tests:
+          - not_null
+          - unique
+      - name: discount_name
+        description: "Name or title of the discount."
+        tests:
+          - not_null
+      - name: discount_percentage
+        description: >
+          "Percentage value of the discount, represented as a decimal (e.g., 10.00 for 10%)."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0.0
+              max_value: 100.0
+      - name: discount_desc
+        description: "Description of the discount, providing additional details about its purpose or use."
+      - name: discount_status
+        description: >
+          "Current status of the discount, such as 'Active' or 'Inactive'."
+        tests:
+          - not_null
+      - name: discount_active_flag
+        description: >
+          "Boolean flag indicating if the discount is active (true for active, false otherwise)."
+        tests:
+          - not_null
+      - name: datetimeload_utc
+        description: >
+          "Timestamp in UTC indicating when the discount record was last synchronized from the source system."
+        tests:
+          - not_null
+
+
+  - name: stg_hotels_schema__hotels
+    description: >
+      This model represents the staging table for hotels, organizing and transforming hotel information 
+      such as their names, contact details, check-in/check-out times, and star ratings.
+    config:
+      materialized: view
+      unique_key: hotel_id
+    columns:
+      - name: hotel_id
+        description: >
+          "Unique surrogate key generated for each hotel based on the hotel identifier."
+        tests:
+          - not_null
+          - unique
+      - name: hotel_name
+        description: "Name of the hotel."
+        tests:
+          - not_null
+      - name: hotel_address
+        description: "Address of the hotel."
+      - name: hotel_phone_number
+        description: "Phone number of the hotel, trimmed of leading and trailing spaces."
+      - name: hotel_email
+        description: "Email address of the hotel."
+      - name: hotel_website
+        description: "Website URL of the hotel."
+      - name: hotel_stars
+        description: "Star rating of the hotel (e.g., 1 to 5 stars)."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 5
+      - name: checkInTime
+        description: "Check-in time for the hotel."
+      - name: checkOutTime
+        description: "Check-out time for the hotel."
+      - name: datetimeload_utc
+        description: >
+          "Timestamp in UTC indicating when the hotel record was last synchronized from the source system."
+        tests:
+          - not_null
+
+
+  - name: stg_hotels_schema__reviews
+    description: >
+      This model represents the staging table for hotel reviews, organizing and transforming data about 
+      customer reviews, including their ratings, comments, and the associated hotel and customer information.
+    config:
+      materialized: incremental
+      unique_key: review_id
+    columns:
+      - name: review_id
+        description: >
+          "Unique surrogate key generated for each review based on the review identifier."
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        description: >
+          "Unique surrogate key generated for each customer who wrote a review, based on the customer identifier."
+        tests:
+          - not_null
+      - name: hotel_id
+        description: >
+          "Unique surrogate key generated for each hotel associated with the review, based on the hotel identifier."
+        tests:
+          - not_null
+      - name: review
+        description: "Text of the review written by the customer, which can contain up to 10,000 characters."
+      - name: rating
+        description: "Rating given by the customer, typically represented as an integer (e.g., 1 to 5 stars)."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 5
+      - name: review_date
+        description: "Date when the review was submitted."
+        tests:
+          - not_null
+      - name: datetimeload_utc
+        description: >
+          "Timestamp in UTC indicating when the review record was last synchronized from the source system."
+        tests:
+          - not_null
+
+
+  - name: stg_hotels_schema__rooms
+    description: >
+      This model represents the staging table for hotel rooms, organizing and transforming information 
+      about individual rooms in a hotel, including their pricing, status, and type.
+    config:
+      materialized: view
+      unique_key: room_id
+    columns:
+      - name: room_id
+        description: >
+          "Unique surrogate key generated for each room based on the room identifier."
+        tests:
+          - not_null
+          - unique
+      - name: hotel_id
+        description: >
+          "Unique surrogate key generated for each hotel that the room belongs to, based on the hotel identifier."
+        tests:
+          - not_null
+      - name: room_number
+        description: "Room number within the hotel."
+        tests:
+          - not_null
+      - name: price_per_night
+        description: "Price per night for the room, represented as a decimal."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0.0
+              max_value: 10000.0
+      - name: room_type
+        description: "Type or category of the room (e.g., single, double, suite)."
+        tests:
+          - not_null
+      - name: room_status
+        description: "Current status of the room (e.g., available, occupied, under maintenance)."
+      - name: valid_from
+        description: "Start date from which the room's data is valid."
+        tests:
+          - not_null
+      - name: valid_to
+        description: "End date until which the room's data is valid."
+

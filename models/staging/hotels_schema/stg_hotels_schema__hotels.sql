@@ -1,4 +1,7 @@
-{{ config(materialized='view') }}
+{{ config(
+    materialized='view'
+    )
+}}
 
 with 
 
@@ -18,8 +21,9 @@ renamed as (
         email::VARCHAR(200)                                     as hotel_email,
         website::VARCHAR(255)                                   as hotel_website,
         stars::INT                                              as hotel_stars,
-        checkintime::TIME                                       as checkInTime,
-        checkouttime::TIME                                      as checkOutTime
+        check_in_time::TIME                                     as checkInTime,
+        check_out_time::TIME                                    as checkOutTime,
+        _fivetran_synced::TIMESTAMP_TZ                          as datetimeload_utc
     from source
 
 )

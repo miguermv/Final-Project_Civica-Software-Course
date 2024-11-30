@@ -1,0 +1,64 @@
+version: 2
+
+   
+models:
+  - name: base_hotels_schema__bookings
+    description: "Base table for hotel bookings with hashed IDs and type casting for data consistency."
+    config:
+        materialized: incremental
+        unique_key: booking_id
+    
+    columns:
+      - name: booking_id
+        description: "Unique identifier for each booking."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Identifier for the customer making the booking."
+        tests:
+          - not_null
+      - name: hotel_id
+        description: "Identifier for the booked hotel."
+        tests:
+          - not_null
+      - name: room_id
+        description: "Identifier for the booked room."
+        tests:
+          - not_null
+      - name: agent_id
+        description: "Identifier for the agent handling the booking."
+        tests:
+          - not_null
+      - name: no_of_adults
+        description: "Number of adult guests for this reservation."
+      - name: no_of_children
+        description: "Number of children guests for this reservation."
+      - name: required_car_parking
+        description: "Indicates whether car parking is required by the guests (TRUE/FALSE)."
+      - name: checkInDate
+        description: "Check-in date for the booking."
+      - name: checkOutDate
+        description: "Check-out date for the booking."
+      - name: created_at
+        description: "Timestamp when the booking was created."
+      - name: base_price_euros
+        description: "Total price of the hotel stay."
+      - name: final_price_euros
+        description: "Total price of the hotel stay with discount applied."
+      - name: discount_code
+        description: "Name of the discount."
+      - name: discount_rate
+        description: "Percentage of discount."
+      - name: payment_date
+        description: "Date when the payment was made."
+      - name: payment_amount
+        description: "Amount of the payment."
+      - name: payment_method
+        description: "Method used for the payment."
+      - name: payment_status
+        description: "Status of the payment (e.g., completed, pending)."
+      - name: datetimeload_utc
+        description: "Date and time of the last data synchronization by Fivetran."
+
+  
