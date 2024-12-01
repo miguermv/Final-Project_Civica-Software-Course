@@ -61,4 +61,76 @@ models:
       - name: datetimeload_utc
         description: "Date and time of the last data synchronization by Fivetran."
 
+
+
+  - name: base_hotels_schema__payments
+    description: "Processed payments table with cleaned and transformed data, including derived payment and booking IDs."
+    config:
+        materialized: incremental
+        unique_key: payment_id
+
+    columns:
+      - name: payment_id
+        description: "Unique identifier for each payment (surrogate key)."
+        tests:
+          - unique
+          - not_null
+      - name: booking_id
+        description: "Identifier for the associated booking (surrogate key)."
+        tests:
+          - not_null
+      - name: payment_date
+        description: "Date when the payment was made."
+      - name: payment_amount
+        description: "Amount of the payment in euros."
+      - name: payment_method
+        description: "Method used for the payment (e.g., credit card, PayPal)."
+      - name: payment_status
+        description: "Current status of the payment (e.g., completed, pending)."
+        tests:
+          - not_null
+      - name: datetimeload_utc
+        description: "Timestamp for the record's load or sync time."
+        tests:
+          - not_null
+
+
+  - name: base_hotels_schema__reviews
+    description: "Processed reviews table, containing customer feedback, ratings, and associated metadata."
+    config:
+        materialized: incremental
+        unique_key: review_id
+    
+    columns:
+      - name: review_id
+        description: "Unique identifier for each review (surrogate key)."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Unique identifier for the customer providing the review (surrogate key)."
+        tests:
+          - not_null
+      - name: hotel_id
+        description: "Unique identifier for the hotel being reviewed (surrogate key)."
+        tests:
+          - not_null
+      - name: review
+        description: "Text content of the review provided by the customer."
+        tests:
+          - not_null
+      - name: rating
+        description: "Numerical rating provided by the customer (e.g., 1-5 stars)."
+        tests:
+          - not_null
+      - name: review_date
+        description: "Date when the review was submitted."
+        tests:
+          - not_null
+      - name: datetimeload_utc
+        description: "Timestamp indicating when the record was loaded or last updated."
+        tests:
+          - not_null
+
+
   

@@ -10,12 +10,6 @@ source as (
 
     select * from {{ source('hotels_schema', 'payments') }}
     
-{% if is_incremental() %}
-
-    WHERE _fivetran_synced > (SELECT MAX(_fivetran_synced) FROM {{ this }} )
-
-{% endif %}
-
 ),
 
 renamed as (
@@ -30,6 +24,12 @@ renamed as (
         _fivetran_synced::TIMESTAMP_TZ                                        as datetimeload_utc
 
     from source
+
+{% if is_incremental() %}
+
+    WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
+
+{% endif %}
 
 )
 

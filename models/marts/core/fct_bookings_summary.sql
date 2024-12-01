@@ -17,9 +17,12 @@ stg_bookings as (
 
 ),
 
+
 renamed as (
 
     select
+    --BOOKINGS
+
         booking_id,
         customer_id,
         hotel_id,
@@ -27,8 +30,7 @@ renamed as (
         agent_id,
         no_of_adults,
         no_of_children,
-        --Campo que me permite saber que tipo de cliente es
-        CASE
+        CASE  --Campo que me permite saber que tipo de cliente es
             WHEN no_of_children = 0 AND no_of_adults = 1 THEN 'Solo Traveler'
             WHEN no_of_children = 0 AND no_of_adults = 2 THEN 'Couple'
             WHEN no_of_children = 0 AND no_of_adults >= 3 THEN 'Group'
@@ -36,13 +38,28 @@ renamed as (
             ELSE 'Unknown'
         END AS customer_type,
         required_car_parking,
-        --Si necesita parking marca como 1, se facilita mas tarde la suma total de este campo.
-        (CASE WHEN required_car_parking = TRUE THEN 1 ELSE 0 END) AS car_parking_requested_flag,
+        (CASE WHEN required_car_parking = TRUE THEN 1 ELSE 0 END) AS car_parking_requested_flag, --Si necesita parking marca como 1, se facilita mas tarde la suma total de este campo.
         checkInDate,
         checkOutDate,
-        --Calculo de total de dias que pasará el cliente en el hotel
-        DATEDIFF('day', check_in_date, check_out_date) AS stay_duration
-        created_at,
+        DATEDIFF('day', checkindate, checkoutdate) AS stay_duration,  --Calculo de total de dias que pasará el cliente en el hotel
+        booking_created_at,
+
+    --PAYMENTS
+        discount_id,
+        base_price_euros,
+        final_price_euros,
+        (base_price_euros - final_price_euros) as discount_applied,
+        payment_date,
+        payment_amount,
+        payment_method,
+        payment_status,
+
+    --REVIEWS
+        review_id,
+        review,
+        {{ cortex_sentiment('review') }} as sentiment_category, --Negative, Positive or Neutral
+        rating,
+        review_date
     from stg_bookings
     
 )

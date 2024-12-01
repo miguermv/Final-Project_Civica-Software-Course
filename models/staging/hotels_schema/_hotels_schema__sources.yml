@@ -106,6 +106,19 @@ sources:
             tests:
               - not_null
               - positive_values
+
+      - name: payments
+        columns:
+          - name: payment_id
+            description: "Unique identifier for each paying."
+            tests:
+              - unique
+              - not_null
+          - name: booking_id
+            description: "Unique identifier for each booking."
+            tests:
+              - unique
+              - not_null
           - name: payment_date
             description: "Date when the payment was made."
           - name: payment_amount

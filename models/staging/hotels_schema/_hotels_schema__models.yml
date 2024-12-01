@@ -39,35 +39,8 @@ models:
         description: Customer's check-in date at the hotel.
       - name: checkOutDate
         description: Customer's check-out date from the hotel.
-      - name: created_at
+      - name: booking_created_at
         description: Record creation date for the booking.
-      - name: datetimeload_utc
-        description: Date and time in UTC when the data was loaded into the database.
-        tests:
-          - not_null
-
-
-  - name: stg_hotels_schema__payments
-    description: >
-      This model represents the staging table for payments, which processes and transforms payment-related information, 
-      including discounts, amounts, methods, and statuses, with support for incremental loading.
-    config:
-      materialized: incremental
-      unique_key: payment_id
-    columns:
-      - name: payment_id
-        description: "Unique surrogate key generated for each payment using booking and customer identifiers."
-        tests:
-          - not_null
-          - unique
-      - name: booking_id
-        description: "Unique identifier for the associated booking."
-        tests:
-          - not_null
-      - name: customer_id
-        description: "Unique identifier for the customer making the payment."
-        tests:
-          - not_null
       - name: discount_id
         description: >
           "Identifier for the discount code applied to the payment. Defaults to 'NODISCOUNT' if no discount is specified."
@@ -88,8 +61,24 @@ models:
         description: "Method used for the payment, such as credit card, bank transfer, or cash."
       - name: payment_status
         description: "Current status of the payment (e.g., completed, pending, failed)."
+      - name: review_id
+        description: >
+          "Unique surrogate key generated for each review based on the review identifier."
+        tests:
+          - unique
+      - name: review
+        description: "Text of the review written by the customer, which can contain up to 10,000 characters."
+      - name: rating
+        description: "Rating given by the customer, typically represented as an integer (e.g., 1 to 5 stars)."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 5
+      - name: review_date
+        description: "Date when the review was submitted."
       - name: datetimeload_utc
-        description: "Date and time in UTC when the payment record was loaded into the database."
+        description: >
+          "Timestamp in UTC indicating when the review record was last synchronized from the source system."
         tests:
           - not_null
 
@@ -149,7 +138,8 @@ models:
           "Unique surrogate key generated for each customer based on the original customer identifier."
         tests:
           - not_null
-          - unique
+         # El id no es único al venir de un sanpshot
+         #- unique
       - name: first_name
         description: "First name of the customer."
         tests:
@@ -274,48 +264,6 @@ models:
           - not_null
 
 
-  - name: stg_hotels_schema__reviews
-    description: >
-      This model represents the staging table for hotel reviews, organizing and transforming data about 
-      customer reviews, including their ratings, comments, and the associated hotel and customer information.
-    config:
-      materialized: incremental
-      unique_key: review_id
-    columns:
-      - name: review_id
-        description: >
-          "Unique surrogate key generated for each review based on the review identifier."
-        tests:
-          - not_null
-          - unique
-      - name: customer_id
-        description: >
-          "Unique surrogate key generated for each customer who wrote a review, based on the customer identifier."
-        tests:
-          - not_null
-      - name: hotel_id
-        description: >
-          "Unique surrogate key generated for each hotel associated with the review, based on the hotel identifier."
-        tests:
-          - not_null
-      - name: review
-        description: "Text of the review written by the customer, which can contain up to 10,000 characters."
-      - name: rating
-        description: "Rating given by the customer, typically represented as an integer (e.g., 1 to 5 stars)."
-        tests:
-          - not_null
-          - dbt_utils.accepted_range:
-              min_value: 1
-              max_value: 5
-      - name: review_date
-        description: "Date when the review was submitted."
-        tests:
-          - not_null
-      - name: datetimeload_utc
-        description: >
-          "Timestamp in UTC indicating when the review record was last synchronized from the source system."
-        tests:
-          - not_null
 
 
   - name: stg_hotels_schema__rooms
