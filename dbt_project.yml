@@ -46,6 +46,8 @@ models:
       +database: PROYECTO_DEV_GOLD_BD
       core:
           +schema: core
+      marketing:
+          +schema: marketing
     intermediate:
       +materialized: table
       +database: PROYECTO_DEV_GOLD_BD

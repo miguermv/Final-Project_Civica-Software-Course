@@ -38,10 +38,12 @@ renamed as (
             ELSE 'Unknown'
         END AS customer_type,
         required_car_parking,
-        (CASE WHEN required_car_parking = TRUE THEN 1 ELSE 0 END) AS car_parking_requested_flag, --Si necesita parking marca como 1, se facilita mas tarde la suma total de este campo.
+        --Si necesita parking marca como 1, se facilita mas tarde la suma total de este campo.
+        (CASE WHEN required_car_parking = TRUE THEN 1 ELSE 0 END) AS car_parking_requested_flag, 
         checkInDate,
         checkOutDate,
-        DATEDIFF('day', checkindate, checkoutdate) AS stay_duration,  --Calculo de total de dias que pasará el cliente en el hotel
+        --Calculo de total de dias que pasará el cliente en el hotel
+        DATEDIFF('day', checkindate, checkoutdate) AS stay_duration,  
         booking_created_at,
 
     --PAYMENTS
