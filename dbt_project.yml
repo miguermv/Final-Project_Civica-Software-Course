@@ -46,6 +46,11 @@ models:
       +database: PROYECTO_DEV_GOLD_BD
       core:
           +schema: core
+    intermediate:
+      +materialized: table
+      +database: PROYECTO_DEV_GOLD_BD
+      +schema: intermediate
+
     
 snapshots:
   +transient: false

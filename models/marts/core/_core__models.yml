@@ -18,14 +18,14 @@ models:
       - name: active_status
         description: Indicates whether the agent is currently active or inactive.
       - name: agent_revenue
-        description: |
+        description: >
           Total revenue earned by the agent based on their commission rate 
           and the payments made for bookings.
         tests:
           - not_null
           - positive_values
       - name: booking_success_rate
-        description: |
+        description: >
           Percentage of total bookings handled by the agent, calculated as 
           (number of bookings for the agent / total bookings) * 100.
         tests:
