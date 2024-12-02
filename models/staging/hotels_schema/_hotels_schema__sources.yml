@@ -25,12 +25,17 @@ sources:
               - not_null
           - name: comission_rate
             description: "Commission rate for the agent."
+            tests:
+              - not_null
+              - positive_values
           - name: active_status
             description: "Indicates whether the agent is active."
             tests:
               - not_null
           - name: _fivetran_synced
             description: "Date and time of the last data synchronization by Fivetran."
+            tests:
+              - not_null
 
       - name: bookings
         loaded_at_field: _fivetran_synced
@@ -57,6 +62,11 @@ sources:
                   field: hotel_id
           - name: room_number
             description: "Identifier for the booked room."
+            tests:
+              - not_null
+              - relationships:
+                  to: source('hotels_schema', 'rooms')
+                  field: room_number
           - name: agent_id
             description: "Identifier for the agent handling the booking."
             tests:
@@ -90,6 +100,8 @@ sources:
                   start_date_column: check_in_date
           - name: created_at
             description: "Timestamp when the booking was created."
+            tests:
+              - not_null
           - name: base_Price
             description: "Total price of the hotel stay."
             tests:
@@ -100,6 +112,10 @@ sources:
               - positive_values
           - name: discount_code
             description: "Name of the discount."
+            tests:
+              - relationships:
+                  to: source('hotels_schema','discounts')
+                  field: discount_name
           - name: discount_rate
             description: "Percentage of discount."
             tests:
@@ -188,6 +204,8 @@ sources:
               - not_null
           - name: _fivetran_synced
             description: "Date and time of the last data synchronization by Fivetran."
+            tests:
+              - not_null
 
       - name: reviews
         loaded_at_field: _fivetran_synced
@@ -197,6 +215,10 @@ sources:
             description: "Unique identifier for each review."
             tests:
               - unique
+              - not_null
+          - name: booking_id
+            description: "Unique booking identifier"
+            tests:
               - not_null
           - name: customer_id
             description: "Identifier for the customer submitting the review."
@@ -256,10 +278,16 @@ sources:
               - positive_values
           - name: type
             description: '{{ doc("room_type") }}'
+            tests:
+              - not_null
           - name: status
             description: "Current status of the room (e.g., available, occupied)."
-          - name: _fivestran_synced
+            tests:
+              - not_null
+          - name: _fivetran_synced
             description: "Date and time of the last data synchronization by Fivetran."
+            tests:
+              - not_null
 
       - name: customers
         loaded_at_field: _fivestran_synced
@@ -302,8 +330,10 @@ sources:
             description: "Gender of the customer."
             tests:
               - not_null
-          - name: _fivestran_synced
+          - name: _fivetran_synced
             description: "Date and time of the last data synchronization by Fivetran."
+            tests:
+              - not_null
 
       - name: discounts
         loaded_at_field: _fivestran_synced
@@ -323,9 +353,11 @@ sources:
                   max_value: 100
           - name: discount_desc
             description: "Description of the discount."
+            tests:
+              - not_null
           - name: discount_status
             description: "Status of the discount."
             tests:
               - not_null
-          - name: _fivestran_synced
+          - name: _fivetran_synced
             description: "Date and time of the last data synchronization by Fivetran."

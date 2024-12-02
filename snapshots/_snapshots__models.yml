@@ -1,6 +1,6 @@
 version: 2
 
-models:
+snapshots:
     - name: snap_hotels_schema__rooms
       description: "Source table for hotel rooms."
       columns:
