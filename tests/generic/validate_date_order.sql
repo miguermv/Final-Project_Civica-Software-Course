@@ -5,6 +5,6 @@ select
 from
     {{ model }}
 where
-    {{ start_date_column }} >= {{ column_name }}
+    {{ start_date_column }} > {{ column_name }}
 
 {% endtest %}

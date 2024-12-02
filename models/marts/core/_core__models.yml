@@ -9,6 +9,9 @@ models:
     columns:
       - name: agent_id
         description: Unique identifier for the agent.
+        tests:
+          - unique
+          - not_null
       - name: name
         description: Name of the agent.
       - name: type
@@ -29,6 +32,7 @@ models:
       - name: customer_id
         description: Unique identifier for the customer.
         tests:
+          - unique
           - not_null
       - name: first_name
         description: First name of the customer.
@@ -65,6 +69,9 @@ models:
     columns:
       - name: date_id
         description: "Unique identifier for each date."
+        tests:
+          - unique
+          - not_null
       - name: day_of_week_name
         description: "Full name of the day of the week."
       - name: day_of_week_name_short
@@ -121,6 +128,9 @@ models:
     columns:
       - name: discount_id
         description: "Unique identifier for each discount."
+        tests:
+          - unique
+          - not_null
       - name: discount_name
         description: "Name of the discount."
       - name: discount_percentage
@@ -138,6 +148,9 @@ models:
     columns:
       - name: hotel_id
         description: "Unique identifier for each hotel."
+        tests:
+          - unique
+          - not_null
       - name: hotel_name
         description: "Name of the hotel."
       - name: hotel_address
@@ -162,6 +175,9 @@ models:
     columns:
       - name: room_id
         description: "Unique identifier for each room."
+        tests:
+          - unique
+          - not_null
       - name: hotel_id
         description: "Unique identifier for the hotel associated with the room."
       - name: room_number
