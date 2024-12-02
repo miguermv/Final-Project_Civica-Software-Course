@@ -37,9 +37,9 @@ hotels_summary AS (
         COUNT(DISTINCT CASE WHEN sentiment_category = 'Positive' THEN review_id ELSE NULL END) AS negative_reviews,
         AVG(rating)::DECIMAL(10,2) AS avg_rating,  -- Media de las calificaciones
     FROM dim_hotels h
-    RIGHT JOIN fct_bookings b ON h.hotel_id = b.hotel_id
+    INNER JOIN fct_bookings b ON h.hotel_id = b.hotel_id
     JOIN dim_rooms r ON h.hotel_id = r.hotel_id
-    RIGHT JOIN dim_customers c ON c.customer_id = b.customer_id
+    INNER JOIN dim_customers c ON c.customer_id = b.customer_id
     GROUP BY h.hotel_name
     ORDER BY h.hotel_name
 

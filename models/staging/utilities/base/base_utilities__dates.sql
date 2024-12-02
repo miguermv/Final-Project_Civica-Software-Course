@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized = "table",
+    prehook = "ALTER SESSION SET WEEK_START = 1 "
+  )
+}}
 
 WITH 
 
