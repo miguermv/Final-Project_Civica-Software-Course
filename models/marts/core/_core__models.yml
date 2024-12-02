@@ -171,7 +171,7 @@ models:
       - name: room_type
         description: "Type of the room (e.g., single, double, suite)."
       - name: room_status
-        description: "Current status of the room (e.g., available, occupied, under maintenance)."
+        description: "Room number within the hotel."
       - name: valid_from
         description: "Start date from which the room details are valid."
       - name: valid_to

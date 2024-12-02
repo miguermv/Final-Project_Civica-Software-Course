@@ -1,0 +1,10 @@
+version: 2
+
+macros:
+  - name: cortex_sentiment
+    description: "A macro that uses the cortex.sentiment function to generate 3 possible values: [Positive, Neutral, Negative]."
+    arguments:
+      - name: column_name
+        type: string
+        description: The name of the column you want to convert
+
