@@ -48,10 +48,9 @@ models:
           +schema: core
       marketing:
           +schema: marketing
-    intermediate:
-      +materialized: table
-      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_BD"
-      +schema: intermediate
+      operations:
+          +schema: operations
+
 
     
 snapshots:
