@@ -8,12 +8,11 @@ with
 stg_bookings as (
 
     select * from {{ ref('stg_hotels_schema__bookings') }}
+        {% if is_incremental() %}
 
-{% if is_incremental() %}
+        HAVING datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
 
-    WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
-
-{% endif %}
+    {% endif %}
 
 ),
 
@@ -61,7 +60,10 @@ renamed as (
         review,
         {{ cortex_sentiment('review') }} as sentiment_category, --Negative, Positive or Neutral
         rating,
-        review_date
+        review_date,
+        
+    --Fecha carga
+        datetimeload_utc
     from stg_bookings
     
 )

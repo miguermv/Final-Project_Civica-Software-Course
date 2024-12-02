@@ -1,0 +1,45 @@
+version: 2
+
+models:
+    - name: snap_hotels_schema__rooms
+      description: "Source table for hotel rooms."
+      columns:
+        - name: room_id
+          description: "Unique identifier for each room."
+        - name: room_number
+          description: "Room number in the hotel."
+        - name: hotel_id
+          description: "Identifier for the hotel the room belongs to."
+        - name: price
+          description: "Price of the room."
+        - name: type
+          description: "Type of the room (e.g., single, double)."
+        - name: status
+          description: "Current status of the room (e.g., available, occupied)."
+        - name: _fivestran_synced
+          description: "Date and time of the last data synchronization by Fivetran."
+
+    - name: snap_hotels_schema__customers
+      description: "Source table for customer details."
+      columns:
+        - name: customer_id
+          description: "Unique identifier for each customer."
+        - name: first_name
+          description: "First name of the customer."
+        - name: last_name
+          description: "Last name of the customer."
+        - name: email
+          description: "Email address of the customer."
+        - name: phone_number
+          description: "Contact number for the customer."
+        - name: birth_country
+          description: "Birth country of the customer."
+        - name: address
+          description: "Address of the customer."
+        - name: dateofbirth
+          description: "Date of birth of the customer."
+        - name: gender
+          description: "Gender of the customer."
+        - name: _fivestran_synced
+          description: "Date and time of the last data synchronization by Fivetran."
+

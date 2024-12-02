@@ -297,7 +297,7 @@ models:
               min_value: 0.0
               max_value: 10000.0
       - name: room_type
-        description: "Type or category of the room (e.g., single, double, suite)."
+        description: '{{ doc("room_type") }}'
         tests:
           - not_null
       - name: room_status

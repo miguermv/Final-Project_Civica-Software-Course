@@ -107,6 +107,7 @@ sources:
               - positive_values
 
       - name: payments
+        description: "Source table for bookings payments."
         columns:
           - name: payment_id
             description: "Unique identifier for each paying."
@@ -254,7 +255,7 @@ sources:
               - not_null
               - positive_values
           - name: type
-            description: "Type of the room (e.g., single, double)."
+            description: '{{ doc("room_type") }}'
           - name: status
             description: "Current status of the room (e.g., available, occupied)."
           - name: _fivestran_synced

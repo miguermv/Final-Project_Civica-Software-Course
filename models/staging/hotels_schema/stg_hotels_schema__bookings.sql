@@ -68,7 +68,7 @@ renamed as (
         review,
         rating,
         review_date,
-        -- Obtener el datetimeload_utc más reciente entre las tres tablas
+        -- Obtener el datetimeload_utc más reciente entre las tres tablas, se actualiza si cambia algun registro de una de las tres tablas
         GREATEST_IGNORE_NULLS(b.datetimeload_utc, r.datetimeload_utc, p.datetimeload_utc) as datetimeload_utc
     from base_bookings b
     LEFT JOIN base_reviews r
