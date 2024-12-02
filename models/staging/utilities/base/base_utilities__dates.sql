@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized = "table",
+    prehook = "ALTER SESSION SET WEEK_START = 1 "
+  )
+}}
 
 WITH 
 
@@ -18,10 +24,10 @@ stg_utilities__dates AS (
         --next_date_day,
         --prior_year_date_day,
         --prior_year_over_year_date_day,
-        --day_of_week,
         --day_of_week_iso,
         day_of_week_name,
         day_of_week_name_short,
+        day_of_week,
         day_of_month,
         day_of_year,
         week_start_date,

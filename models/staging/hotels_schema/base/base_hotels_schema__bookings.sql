@@ -9,12 +9,6 @@ with
 source as (
 
     select * from {{ source('hotels_schema', 'bookings') }}
-    
-{% if is_incremental() %}
-
-    WHERE _fivetran_synced > (SELECT MAX(_fivetran_synced) FROM {{ this }} )
-
-{% endif %}
 
 ),
 
@@ -36,13 +30,16 @@ renamed as (
         discount_code::VARCHAR(20)                                            as discount_code,
         discount_rate::DECIMAL(10,2)                                          as discount_rate,
         created_at::DATE                                                      as created_at,
-        payment_date::DATE                                                    as payment_date,
-        payment_amount::DECIMAL(10,2)                                         as payment_amount,
-        payment_method::VARCHAR(50)                                           as payment_method,
-        payment_status::VARCHAR(20)                                           as payment_status,
         _fivetran_synced::TIMESTAMP_TZ                                        as datetimeload_utc
 
     from source
+
+    {% if is_incremental() %}
+
+        WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
+
+    {% endif %}
+    
 
 )
 

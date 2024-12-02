@@ -40,14 +40,21 @@ models:
     # Applies to all files under models/example/
     staging:
       +materialized: view
-      +database: PROYECTO_DEV_SILVER_BD #"{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_DB"  Usando variables de entorno
+      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_BD" #PROYECTO_DEV_SILVER_BD
     marts:
       +materialized: table
-      +database: PROYECTO_DEV_GOLD_BD
+      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_BD"
       core:
           +schema: core
+      marketing:
+          +schema: marketing
+    intermediate:
+      +materialized: table
+      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_BD"
+      +schema: intermediate
+
     
 snapshots:
   +transient: false
-  +target_database: PROYECTO_DEV_SILVER_BD
+  +target_database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_BD"
   +target_schema: snapshots

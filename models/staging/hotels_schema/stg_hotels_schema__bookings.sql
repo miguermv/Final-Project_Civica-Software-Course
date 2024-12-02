@@ -5,24 +5,49 @@
 }}
 
 with 
-source as (
+
+base_bookings as (
 
     select * from {{ ref('base_hotels_schema__bookings') }}
 
-{% if is_incremental() %}
+    {% if is_incremental() %}
 
-    WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
+        WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
 
-{% endif %}
+    {% endif %}
+
+),
+
+base_reviews as (
+
+    select * from {{ ref('base_hotels_schema__reviews') }}
+
+    {% if is_incremental() %}
+
+        WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
+
+    {% endif %}
+
+),
+
+base_payments as (
+
+    select * from {{ ref('base_hotels_schema__payments') }}
+
+    {% if is_incremental() %}
+
+        WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
+
+    {% endif %}
 
 ),
 
 renamed as (
 
     select
-        booking_id,
-        customer_id,
-        hotel_id,
+        b.booking_id,
+        b.customer_id,
+        b.hotel_id,
         room_id,
         agent_id,
         no_of_adults,
@@ -30,9 +55,27 @@ renamed as (
         required_car_parking,
         checkInDate,
         checkOutDate,
-        created_at,
-        datetimeload_utc
-    from source
+        created_at as booking_created_at,
+        payment_id,
+        {{ control_null_or_empty('discount_code', "'NODISCOUNT'") }} as discount_id,
+        base_price_euros,
+        final_price_euros,
+        payment_date,
+        payment_amount,
+        payment_method,
+        payment_status,
+        review_id,
+        review,
+        rating,
+        review_date,
+        -- Obtener el datetimeload_utc más reciente entre las tres tablas
+        GREATEST_IGNORE_NULLS(b.datetimeload_utc, r.datetimeload_utc, p.datetimeload_utc) as datetimeload_utc
+    from base_bookings b
+    LEFT JOIN base_reviews r
+    ON b.booking_id = r.booking_id
+    LEFT JOIN base_payments p
+    ON b.booking_id = p.booking_id
+
     
 )
 

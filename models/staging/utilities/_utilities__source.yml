@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: utilities
     schema: utilities
-    database: PROYECTO_DEV_BRONZE_BD
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_BD"
     
     tables:
       - name: holidays_es

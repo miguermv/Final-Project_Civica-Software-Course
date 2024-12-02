@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: hotels_schema
     schema: hotels_schema
-    database: PROYECTO_DEV_BRONZE_BD
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_BD"
     
     tables:
       - name: agents
@@ -86,9 +86,8 @@ sources:
             description: "Check-out date for the booking."
             tests:
               - not_null
-             # - validate_date_order:
-             #    start_date_column: check_in_date
-             #    end_date_column: check_out_date
+              - validate_date_order:
+                  start_date_column: check_in_date
           - name: created_at
             description: "Timestamp when the booking was created."
           - name: base_Price
@@ -106,6 +105,19 @@ sources:
             tests:
               - not_null
               - positive_values
+
+      - name: payments
+        columns:
+          - name: payment_id
+            description: "Unique identifier for each paying."
+            tests:
+              - unique
+              - not_null
+          - name: booking_id
+            description: "Unique identifier for each booking."
+            tests:
+              - unique
+              - not_null
           - name: payment_date
             description: "Date when the payment was made."
           - name: payment_amount
