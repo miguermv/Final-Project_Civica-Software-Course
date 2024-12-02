@@ -4,6 +4,7 @@ with
 source as (
 
     select * from {{ ref('snap_hotels_schema__customers') }}
+    where dbt_valid_to IS NULL
 
 ),
 
@@ -22,6 +23,7 @@ renamed as (
         dbt_valid_from                                          as valid_from,
         dbt_valid_to                                            as valid_to
     from source
+    
 
 )
 
