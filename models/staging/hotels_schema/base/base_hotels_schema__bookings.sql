@@ -1,6 +1,7 @@
 {{ config(
-    materialized='incremental',
-    unique_key = 'booking_id'
+        materialized='incremental',
+        unique_key = 'booking_id',
+        on_schema_change='fail'
     ) 
 }}
 
@@ -9,6 +10,12 @@ with
 source as (
 
     select * from {{ source('hotels_schema', 'bookings') }}
+
+{% if is_incremental() %}
+
+    WHERE _fivetran_synced > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
+
+{% endif %}
 
 ),
 
@@ -34,11 +41,7 @@ renamed as (
 
     from source
 
-    {% if is_incremental() %}
 
-        WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
-
-    {% endif %}
     
 
 )

@@ -10,6 +10,12 @@ source as (
 
     select * from {{ source('hotels_schema', 'reviews') }}
 
+{% if is_incremental() %}
+
+    WHERE _fivetran_synced > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
+
+{% endif %}
+
 ),
 
 renamed as (
@@ -24,14 +30,6 @@ renamed as (
         review_date::DATE                                       as review_date,
         _fivetran_synced::TIMESTAMP_TZ                          as datetimeload_utc
     from source
-
-
-{% if is_incremental() %}
-
-    WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
-
-{% endif %}
-
 
 )
 
