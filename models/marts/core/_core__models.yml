@@ -153,6 +153,10 @@ models:
           - not_null
       - name: hotel_name
         description: "Name of the hotel."
+      - name: hotel_country
+        description: "Country of the hotel."
+      - name: hotel_city
+        description: "City of the hotel."
       - name: hotel_address
         description: "Address of the hotel."
       - name: hotel_phone_number

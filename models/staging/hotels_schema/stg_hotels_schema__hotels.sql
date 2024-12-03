@@ -16,6 +16,8 @@ renamed as (
     select
         {{ dbt_utils.generate_surrogate_key(['hotel_id']) }}    as hotel_id,
         name::VARCHAR(200)                                      as hotel_name,
+        country::VARCHAR(200)                                   as hotel_country,
+        city::VARCHAR(200)                                      as hotel_city,
         address::VARCHAR(250)                                   as hotel_address,
         TRIM(phone_number)::VARCHAR(15)                         as hotel_phone_number,
         email::VARCHAR(200)                                     as hotel_email,
