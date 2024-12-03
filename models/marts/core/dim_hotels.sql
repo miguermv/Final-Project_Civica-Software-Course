@@ -13,6 +13,8 @@ renamed as (
     select
         hotel_id,
         hotel_name,
+        hotel_country,
+        hotel_city,
         hotel_address,
         hotel_phone_number,
         hotel_email,
