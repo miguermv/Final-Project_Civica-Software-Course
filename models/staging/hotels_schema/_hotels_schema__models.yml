@@ -4,9 +4,6 @@ models:
   - name: stg_hotels_schema__bookings
     description: >
       This model represents the staging table for bookings, which contains information about reservations made at various hotels, including customer details, room assignments, and stay dates.
-    config:
-      materialized: incremental
-      unique_key: booking_id
     columns:
       - name: booking_id
         description: Unique identifier for the booking.
@@ -87,9 +84,6 @@ models:
     description: >
       This model represents the staging table for hotel agents, processing and transforming information about agents, 
       including their details, type, commission rate, and active status.
-    config:
-      materialized: view
-      unique_key: agent_id
     columns:
       - name: agent_id
         description: >
@@ -129,9 +123,6 @@ models:
     description: >
       This model represents the staging table for customers, transforming and organizing customer details 
       such as personal information, contact details, and address information.
-    config:
-      materialized: view
-      unique_key: customer_id
     columns:
       - name: customer_id
         description: >
@@ -179,9 +170,6 @@ models:
     description: >
       This model represents the staging table for discounts, organizing and transforming information 
       about discounts in the hotel booking system, including their identifiers, rates, and active statuses.
-    config:
-      materialized: view
-      unique_key: discount_id
     columns:
       - name: discount_id
         description: >
@@ -224,9 +212,6 @@ models:
     description: >
       This model represents the staging table for hotels, organizing and transforming hotel information 
       such as their names, contact details, check-in/check-out times, and star ratings.
-    config:
-      materialized: view
-      unique_key: hotel_id
     columns:
       - name: hotel_id
         description: >
@@ -274,9 +259,6 @@ models:
     description: >
       This model represents the staging table for hotel rooms, organizing and transforming information 
       about individual rooms in a hotel, including their pricing, status, and type.
-    config:
-      materialized: view
-      unique_key: room_id
     columns:
       - name: room_id
         description: >
