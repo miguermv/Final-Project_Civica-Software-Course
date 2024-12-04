@@ -10,23 +10,13 @@ base_bookings as (
 
     select * from {{ ref('base_hotels_schema__bookings') }}
 
-    {% if is_incremental() %}
-
-        WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
-
-    {% endif %}
-
 ),
 
 base_reviews as (
 
     select * from {{ ref('base_hotels_schema__reviews') }}
 
-    {% if is_incremental() %}
 
-        WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
-
-    {% endif %}
 
 ),
 
@@ -34,11 +24,7 @@ base_payments as (
 
     select * from {{ ref('base_hotels_schema__payments') }}
 
-    {% if is_incremental() %}
 
-        WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
-
-    {% endif %}
 
 ),
 
@@ -80,3 +66,9 @@ renamed as (
 )
 
 select * from renamed
+
+{% if is_incremental() %}
+
+    WHERE datetimeload_utc > (SELECT MAX(datetimeload_utc) FROM {{ this }} )
+
+{% endif %}
