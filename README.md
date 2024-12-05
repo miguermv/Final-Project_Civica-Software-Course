@@ -1,6 +1,6 @@
-# Final Project - Civica Software Course
+# Final Project - Cívica Software Course
 ### Overview
-This repository contains the final project I completed during the Data Engineering course at Civica Software. The project was designed to apply the ETL (Extract, Transform, Load) process and practice data modeling techniques using modern tools and technologies.
+This repository contains the final project I completed during the Data Engineering course at Cívica Software. The project was designed to apply the ETL (Extract, Transform, Load) process and practice data modeling techniques using modern tools and technologies.
 
 The pipeline built in this project simulates a real-world workflow, covering all stages from raw data ingestion to a structured and analytical-ready model, culminating in actionable insights through visualization.
 
